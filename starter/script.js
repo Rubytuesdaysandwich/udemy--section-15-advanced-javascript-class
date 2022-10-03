@@ -11,7 +11,7 @@ const inputDuration = document.querySelector('.form__input--duration');
 const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
-let map, mapEvent;
+//// let map, mapEvent;//don't need these
 // Using the Geolocation API
 class App {
   #map; //set the variables to private
@@ -21,14 +21,13 @@ class App {
 
     form.addEventListener('submit', this._newWorkout.bind(this));
     {
-      inputType.addEventListener('change', function () {
-        // inputElevation
-        //   .closest('.form__row')
-        //   .classList.toggle('form__row--hidden');
-        // inputCadence
-        //   .closest('.form__row')
-        //   .classList.toggle('form__row--hidden');
-      });
+      inputType.addEventListener('change', this._toggleElevationField);
+      //// inputElevation
+      ////   .closest('.form__row')
+      ////   .classList.toggle('form__row--hidden');
+      //// inputCadence
+      ////   .closest('.form__row')
+      ////   .classList.toggle('form__row--hidden');
     }
   }
   _getPosition() {
@@ -71,7 +70,10 @@ class App {
     form.classList.remove('hidden'); //remove the hidden class from the form so it appears
     inputDistance.focus(); //put cursor on the distance input after selecting the map to put down a tag}
   }
-  _toggleElevationField() {}
+  _toggleElevationField() {
+    inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+    inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+  }
   _newWorkout(e) {
     e.preventDefault();
     inputDistance.value =

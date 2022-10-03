@@ -18,6 +18,38 @@ class App {
   #mapEvent;
   constructor() {
     this._getPosition();
+
+    form.addEventListener('submit', this._newWorkout.bind(this)); {
+    //   e.preventDefault();
+    //   inputDistance.value =
+    //     inputDuration.value =
+    //     inputCadence.value =
+    //     inputElevation.value =
+    //       '';
+    //   // display marker
+    //   console.log(mapEvent);
+    //   const { lat, lng } = mapEvent.latlng;
+
+    //   L.marker([lat, lng])
+    //     .addTo(map)
+    //     .bindPopup(
+    //       L.popup({
+    //         maxWidth: 250,
+    //         minWidth: 100,
+    //         autoClose: false,
+    //         closeOnClick: false,
+    //         className: 'running-popup',
+    //       })
+    //     )
+    //     .setPopupContent('Workout')
+    //     .openPopup();
+    // });
+    inputType.addEventListener('change', function () {
+      inputElevation
+        .closest('.form__row')
+        .classList.toggle('form__row--hidden');
+      inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+    });
   }
   _getPosition() {
     //get users current location
@@ -72,7 +104,31 @@ class App {
   }
   _showForm() {}
   _toggleElevationField() {}
-  _newWorkout() {}
+  _newWorkout(e) {
+    e.preventDefault();
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        '';
+    // display marker
+    // console.log(this.#mapEvent);
+    const { lat, lng } = mapEvent.latlng;
+
+    L.marker([lat, lng])
+      .addTo(this.#map)
+      .bindPopup(
+        L.popup({
+          maxWidth: 250,
+          minWidth: 100,
+          autoClose: false,
+          closeOnClick: false,
+          className: 'running-popup',
+        })
+      )}
+      .setPopupContent('Workout')
+      .openPopup();
+  
 }
 //making an object for App called app
 const app = new App();

@@ -102,7 +102,7 @@ class App {
 }
 //making an object for App called app
 const app = new App();
-app._getPosition();
+//! app._getPosition();//bugs out code bad written in video but does not work.
 ////////////////////////////////////////////
 //!========================================================
 // if (navigator.geolocation)

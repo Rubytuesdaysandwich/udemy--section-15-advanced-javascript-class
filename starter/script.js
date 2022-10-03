@@ -24,7 +24,7 @@ if (navigator.geolocation)
       //set latitude and longitude to coords
       const coords = [latitude, longitude];
       //coords and zoom level high number closer lower farther out
-      const map = L.map('map').setView(coords, 13);
+      map = L.map('map').setView(coords, 13);
       //   console.log(map);
       //fr/hot was org
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -33,26 +33,27 @@ if (navigator.geolocation)
       }).addTo(map);
       // set the marker icon to the coords of latitude and longitude using current location
       //handling clicks on map
-      map.on('click', function (mapEvent) {
+      map.on('click', function (mapE) {
+        mapEvent = mapE;
         form.classList.remove('hidden');
         inputDistance.focus();
-        // console.log(mapEvent);
-        // const { lat, lng } = mapEvent.latlng;
+        //// console.log(mapEvent);
+        // // const { lat, lng } = mapEvent.latlng;
 
-        // L.marker([lat, lng])
-        //   .addTo(map)
-        //   .bindPopup(
-        //     L.popup({
-        //       maxWidth: 250,
-        //       minWidth: 100,
-        //       autoClose: false,
-        //       closeOnClick: false,
-        //       className: 'running-popup',
-        //     })
-        //   )
-        //   .setPopupContent('Workout')
-        //   .openPopup();
-        // on is like a event listener in normal javascript
+        // // L.marker([lat, lng])
+        ////   .addTo(map)
+        // //   .bindPopup(
+        // //     L.popup({
+        // //       maxWidth: 250,
+        // //       minWidth: 100,
+        ////       autoClose: false,
+        // //       closeOnClick: false,
+        // //       className: 'running-popup',
+        ////     })
+        // //   )
+        ////   .setPopupContent('Workout')
+        ////   .openPopup();
+        //// on is like a event listener in normal javascript
       });
     },
     function () {
@@ -66,20 +67,22 @@ form.addEventListener('submit', function (e) {
     inputCadence.value =
     inputElevation.value =
       '';
-  //display marker
+  // display marker
   console.log(mapEvent);
   const { lat, lng } = mapEvent.latlng;
+
   L.marker([lat, lng])
     .addTo(map)
     .bindPopup(
       L.popup({
         maxWidth: 250,
-        minWidth100,
+        minWidth: 100,
         autoClose: false,
         closeOnClick: false,
         className: 'running-popup',
       })
-    );
-  setPopupContent('Workout').openPopup();
+    )
+    .setPopupContent('Workout')
+    .openPopup();
 });
 inputType.addEventListener('change', function () {});

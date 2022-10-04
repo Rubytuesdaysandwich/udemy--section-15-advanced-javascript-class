@@ -82,7 +82,11 @@ class App {
   #mapEvent;
   #workouts = [];
   constructor() {
+    //get users positition
     this._getPosition();
+    //get data from local storage
+    this._getLocalStorage();
+    //attach event handlers
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField); //listen to the change of the workout to decide which metric to use to measure the workout
     containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
@@ -108,11 +112,11 @@ class App {
     // console.log(position);
     const { latitude } = position.coords;
     const { longitude } = position.coords;
-    console.log(`https://www.google.com/maps/@${latitude},-${longitude}`);
+    // console.log(`https://www.google.com/maps/@${latitude},-${longitude}`);
     //set latitude and longitude to coords
     const coords = [latitude, longitude];
     //coords and zoom level high number closer lower farther out
-    console.log(this); //get the value of this
+    // console.log(this); //get the value of this
     this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
     //   console.log(map);
     //fr/hot was org
@@ -122,10 +126,13 @@ class App {
     }).addTo(this.#map);
     // set the marker icon to the coords of latitude and longitude using current location
     //handling clicks on map
-    this.#map.on('click', this._showForm.bind(this));
+    // this.#map.on('click', this._showForm.bind(this));
     //// this.#mapEvent = mapE;
     //// form.classList.remove('hidden'); //remove the hidden class from the form so it appears
     //// inputDistance.focus(); //put cursor on the distance input after selecting the map to put down a tag
+    this.#workouts.forEach(work => {
+      this._renderWorkoutMarker(work); //calling this here because map needs to load
+    });
   }
 
   _showForm(mapE) {
@@ -193,31 +200,15 @@ class App {
     }
     //Add new object to workout array
     this.#workouts.push(workout);
-    console.log(workout);
+    // console.log(workout);
     //Render workout on map as marker
     this._renderWorkoutMarker(workout); //call the rendWorkoutMarker method
     //render workout on list
     this._renderWorkout(workout);
     // Hide for + clear input fields
     this._hideForm();
-
-    // display marker
-    // console.log(this.#mapEvent);
-    // const { lat, lng } = this.#mapEvent.latlng;
-
-    // L.marker([lat, lng]) //controls what the marker looks like and how it acts
-    //   .addTo(this.#map)
-    //   .bindPopup(
-    //     L.popup({
-    //       maxWidth: 250,
-    //       minWidth: 100,
-    //       autoClose: false,
-    //       closeOnClick: false,
-    //       className: 'running-popup',
-    //     })
-    //   )
-    //   .setPopupContent('Workout')
-    //   .openPopup(); //controls what the marker looks like and how it acts
+    // set local storage to all workouts
+    this._setLocalStorage();
   }
   //creates a method for rendering the workout
 
@@ -287,14 +278,14 @@ class App {
   }
   _moveToPopup(e) {
     const workoutEl = e.target.closest('.workout');
-    console.log(workoutEl);
+    // console.log(workoutEl);
 
     if (!workoutEl) return;
 
     const workout = this.#workouts.find(
       work => work.id === workoutEl.dataset.id
     );
-    console.log(workout);
+    // console.log(workout);
 
     this.#map.setView(workout.coords, this.#mapZoomLevel, {
       animate: true,
@@ -303,7 +294,21 @@ class App {
       },
     });
     //using the public interface
-    workout.click();
+    // workout.click();//! after pulling from local storage your prototype chain will be broken so this click will not be available
+  }
+  _setLocalStorage() {
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem('workouts'));
+    // console.log(data);
+    if (!data) return;
+
+    this.#workouts = data;
+
+    this.#workouts.forEach(work => {
+      this._renderWorkout(work);
+    });
   }
 }
 //making an object for App called app//calling the app with out this the contents can't be accessed

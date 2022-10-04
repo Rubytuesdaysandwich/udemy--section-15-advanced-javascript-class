@@ -20,12 +20,12 @@ class Workout {
     this.coords = coords; // [lat,lan]
     this.distance = distance;
     this.duration = duration;
-    //// this._setDescription();
+    containerWorkouts.addEventListener('click',this._moveToPopup)
   }
   _setDescription(){
     // prettier-ignore
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]}${this.date.getDate()}`;
+    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} ${this.date.getDate()}`;
 
   }
 }
@@ -129,6 +129,17 @@ class App {
     form.classList.remove('hidden'); //remove the hidden class from the form so it appears
     inputDistance.focus(); //put cursor on the distance input after selecting the map to put down a tag}
   }
+  _hideForm() {
+    //reset the values
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        '';
+    form.style.display = 'none';
+    form.classList.add('hidden');
+    setTimeout(() => (form.style.display = 'grid'), 1000);
+  }
   _toggleElevationField() {
     inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
     inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
@@ -183,12 +194,8 @@ class App {
     //render workout on list
     this._renderWorkout(workout);
     // Hide for + clear input fields
+    this._hideForm();
 
-    inputDistance.value =
-      inputDuration.value =
-      inputCadence.value =
-      inputElevation.value =
-        '';
     // display marker
     // console.log(this.#mapEvent);
     // const { lat, lng } = this.#mapEvent.latlng;
@@ -221,7 +228,9 @@ class App {
           className: `${workout.type}-popup`,
         })
       )
-      .setPopupContent('workout')
+      .setPopupContent(
+        `${workout.type === 'running' ? '🏃‍♂️ ' : '🚴‍♂️ '}${workout.description}`
+      )
       .openPopup(); //controls what the marker looks like and how it acts
   }
   _renderWorkout(workout) {
@@ -230,7 +239,7 @@ class App {
           <h2 class="workout__title">${workout.description}</h2>
           <div class="workout__details">
             <span class="workout__icon">${
-              workout.name === 'running' ? '🏃‍♂️' : '🚴‍♂️'
+              workout.type === 'running' ? '🏃‍♂️' : '🚴‍♂️'
             }</span>
             <span class="workout__value">${workout.distance}</span>
             <span class="workout__unit">km</span>
@@ -270,6 +279,9 @@ class App {
 `;
 
     form.insertAdjacentHTML('afterend', html); //insert the modified html into the Dom
+  }
+  _moveToPopup(e) {
+    const workoutEl = e.target;
   }
 }
 //making an object for App called app//calling the app with out this the contents can't be accessed

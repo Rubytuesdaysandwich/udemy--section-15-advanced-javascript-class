@@ -25,8 +25,8 @@ class Workout {
   _setDescription(){
     // prettier-ignore
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]}${this.date.getDate()}`;
+
   }
 }
 class Running extends Workout {
@@ -181,7 +181,7 @@ class App {
     //Render workout on map as marker
     this._renderWorkoutMarker(workout); //call the rendWorkoutMarker method
     //render workout on list
-    this._renderWorkout();
+    this._renderWorkout(workout);
     // Hide for + clear input fields
 
     inputDistance.value =
@@ -225,7 +225,7 @@ class App {
       .openPopup(); //controls what the marker looks like and how it acts
   }
   _renderWorkout(workout) {
-    const html = `
+    let html = `
     <li class="workout workout--${workout.type}" data-id="${workout.id}">
           <h2 class="workout__title">${workout.description}</h2>
           <div class="workout__details">

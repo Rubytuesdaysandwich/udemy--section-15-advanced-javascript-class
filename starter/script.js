@@ -26,7 +26,7 @@ class Workout {
     // prettier-ignore
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)}on ${months[this.date.getMonth()]}${this.date.getDate()}`
+    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]}${this.date.getDate()}`;
   }
 }
 class Running extends Workout {
@@ -269,7 +269,7 @@ class App {
 </li> -->
 `;
 
-    form.insertAdjacentElement('afterend', html); //insert the modified html into the Dom
+    form.insertAdjacentHTML('afterend', html); //insert the modified html into the Dom
   }
 }
 //making an object for App called app//calling the app with out this the contents can't be accessed

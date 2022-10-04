@@ -112,7 +112,7 @@ class App {
     // console.log(position);
     const { latitude } = position.coords;
     const { longitude } = position.coords;
-    // console.log(`https://www.google.com/maps/@${latitude},-${longitude}`);
+    console.log(`https://www.google.com/maps/@${latitude},-${longitude}`);
     //set latitude and longitude to coords
     const coords = [latitude, longitude];
     //coords and zoom level high number closer lower farther out

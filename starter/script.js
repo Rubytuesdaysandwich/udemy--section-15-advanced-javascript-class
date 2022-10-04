@@ -310,6 +310,10 @@ class App {
       this._renderWorkout(work);
     });
   }
+  reset() {
+    localStorage.removeItem('workouts'); //reset local storage
+    location.reload();
+  }
 }
 //making an object for App called app//calling the app with out this the contents can't be accessed
 const app = new App();

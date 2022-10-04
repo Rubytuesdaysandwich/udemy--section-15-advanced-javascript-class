@@ -1,7 +1,6 @@
 'use strict';
 // Using the Geolocation API
 // prettier-ignore
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // const form = document.querySelector('.form');
 // const containerWorkouts = document.querySelector('.workouts');
@@ -21,6 +20,13 @@ class Workout {
     this.coords = coords; // [lat,lan]
     this.distance = distance;
     this.duration = duration;
+    //// this._setDescription();
+  }
+  _setDescription(){
+    // prettier-ignore
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)}on ${months[this.date.getMonth()]}${this.date.getDate()}`
   }
 }
 class Running extends Workout {
@@ -29,6 +35,7 @@ class Running extends Workout {
     super(coords, distance, duration);
     this.cadence = cadence;
     this.calcPace();
+    this._setDescription();
   }
   calcPace() {
     //min/km
@@ -43,6 +50,7 @@ class Cycling extends Workout {
     // this.type = 'cycling'
     this.elevationGain = elevationGain;
     this.calcSpeed();
+    this._setDescription();
   }
   calcSpeed() {
     //km/h
@@ -171,9 +179,9 @@ class App {
     this.#workouts.push(workout);
     console.log(workout);
     //Render workout on map as marker
-    this.renderWorkoutMarker(workout); //call the rendWorkoutMarker method
+    this._renderWorkoutMarker(workout); //call the rendWorkoutMarker method
     //render workout on list
-
+    this._renderWorkout();
     // Hide for + clear input fields
 
     inputDistance.value =
@@ -201,7 +209,7 @@ class App {
   }
   //creates a method for rendering the workout
 
-  renderWorkoutMarker(workout) {
+  _renderWorkoutMarker(workout) {
     L.marker(workout.coords) //controls what the marker looks like and how it acts get the lat and lng
       .addTo(this.#map)
       .bindPopup(
@@ -215,6 +223,53 @@ class App {
       )
       .setPopupContent('workout')
       .openPopup(); //controls what the marker looks like and how it acts
+  }
+  _renderWorkout(workout) {
+    const html = `
+    <li class="workout workout--${workout.type}" data-id="${workout.id}">
+          <h2 class="workout__title">${workout.description}</h2>
+          <div class="workout__details">
+            <span class="workout__icon">${
+              workout.name === 'running' ? '🏃‍♂️' : '🚴‍♂️'
+            }</span>
+            <span class="workout__value">${workout.distance}</span>
+            <span class="workout__unit">km</span>
+          </div>
+          <div class="workout__details">
+            <span class="workout__icon">⏱</span>
+            <span class="workout__value">${workout.duration}</span>
+            <span class="workout__unit">min</span>
+          </div>
+    `;
+    if (workout.type === 'running')
+      html += `<div class="workout__details">
+      <span class="workout__icon">⚡️</span>
+    <span class="workout__value">${workout.pace.toFixed(1)}</span>
+    <span class="workout__unit">min/km</span>
+  </div>
+  <div class="workout__details">
+    <span class="workout__icon">🦶🏼</span>
+    <span class="workout__value">${workout.cadence}</span>
+    <span class="workout__unit">spm</span>
+  </div>
+</li>`;
+
+    if (workout.type === 'cycling')
+      html += `
+      <div class="workout__details">
+<span class="workout__icon">⚡️</span>
+<span class="workout__value">${workout.speed.toFixed(1)}</span>
+<span class="workout__unit">km/h</span>
+</div>
+<div class="workout__details">
+<span class="workout__icon">⛰</span>
+<span class="workout__value">${workout.elevationGain}</span>
+<span class="workout__unit">m</span>
+</div>
+</li> -->
+`;
+
+    form.insertAdjacentElement('afterend', html); //insert the modified html into the Dom
   }
 }
 //making an object for App called app//calling the app with out this the contents can't be accessed

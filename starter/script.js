@@ -42,6 +42,7 @@ class Cycling extends Workout {
     super(coords, distance, duration);
     // this.type = 'cycling'
     this.elevationGain = elevationGain;
+    this.calcSpeed();
   }
   calcSpeed() {
     //km/h
@@ -163,8 +164,8 @@ class App {
         !allPositive(distance, duration) //using helper functions in a guard clause to determine if they are valid inputs
       ) {
         return alert('Inputs have to be positive numbers');
-        workout = new Cycling([lat, lng], distance, duration, elevation);
       }
+      workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     //Add new object to workout array
     this.#workouts.push(workout);

@@ -13,20 +13,23 @@
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
-
+clicks= 0;
   constructor(coords, distance, duration) {
     // this.date=...
     // this.id=...
     this.coords = coords; // [lat,lan]
     this.distance = distance;
     this.duration = duration;
-    containerWorkouts.addEventListener('click',this._moveToPopup)
+    
   }
   _setDescription(){
     // prettier-ignore
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} ${this.date.getDate()}`;
 
+  }
+  click(){//using the public interface
+    this.clicks++;
   }
 }
 class Running extends Workout {
@@ -75,12 +78,14 @@ const inputElevation = document.querySelector('.form__input--elevation');
 
 class App {
   #map; //set the variables to private
+  #mapZoomLevel = 13;
   #mapEvent;
   #workouts = [];
   constructor() {
     this._getPosition();
     form.addEventListener('submit', this._newWorkout.bind(this));
     inputType.addEventListener('change', this._toggleElevationField); //listen to the change of the workout to decide which metric to use to measure the workout
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
   //// inputElevation
   ////   .closest('.form__row')
@@ -108,7 +113,7 @@ class App {
     const coords = [latitude, longitude];
     //coords and zoom level high number closer lower farther out
     console.log(this); //get the value of this
-    this.#map = L.map('map').setView(coords, 13);
+    this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
     //   console.log(map);
     //fr/hot was org
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -281,7 +286,24 @@ class App {
     form.insertAdjacentHTML('afterend', html); //insert the modified html into the Dom
   }
   _moveToPopup(e) {
-    const workoutEl = e.target;
+    const workoutEl = e.target.closest('.workout');
+    console.log(workoutEl);
+
+    if (!workoutEl) return;
+
+    const workout = this.#workouts.find(
+      work => work.id === workoutEl.dataset.id
+    );
+    console.log(workout);
+
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
+    //using the public interface
+    workout.click();
   }
 }
 //making an object for App called app//calling the app with out this the contents can't be accessed

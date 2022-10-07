@@ -13,22 +13,22 @@
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10);
-clicks= 0;
+  clicks = 0;
   constructor(coords, distance, duration) {
     // this.date=...
     // this.id=...
     this.coords = coords; // [lat,lan]
     this.distance = distance;
     this.duration = duration;
-    
+
   }
-  _setDescription(){
+  _setDescription() {
     // prettier-ignore
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${months[this.date.getMonth()]} ${this.date.getDate()}`;
 
   }
-  click(){//using the public interface
+  click() {//using the public interface
     this.clicks++;
   }
 }
@@ -118,7 +118,7 @@ class App {
     //coords and zoom level high number closer lower farther out
     // console.log(this); //get the value of this
     this.#map = L.map('map').setView(coords, this.#mapZoomLevel);
-    //   console.log(map);
+    // console.log(map);
     //fr/hot was org
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
@@ -126,7 +126,7 @@ class App {
     }).addTo(this.#map);
     // set the marker icon to the coords of latitude and longitude using current location
     //handling clicks on map
-    // this.#map.on('click', this._showForm.bind(this));
+    this.#map.on('click', this._showForm.bind(this));
     //// this.#mapEvent = mapE;
     //// form.classList.remove('hidden'); //remove the hidden class from the form so it appears
     //// inputDistance.focus(); //put cursor on the distance input after selecting the map to put down a tag
